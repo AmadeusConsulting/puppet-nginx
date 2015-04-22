@@ -20,6 +20,7 @@ class nginx::package(
   $package_flavor = undef,
   $manage_repo    = $::nginx::params::manage_repo,
 ) inherits ::nginx::params {
+  include ::stdlib
 
   anchor { 'nginx::package::begin': }
   anchor { 'nginx::package::end': }
@@ -31,8 +32,7 @@ class nginx::package(
         package_source => $package_source,
         package_ensure => $package_ensure,
         package_name   => $package_name,
-        require        => Anchor['nginx::package::begin'],
-        before         => Anchor['nginx::package::end'],
+        stage          => setup
       }
     }
     'debian': {
@@ -41,8 +41,7 @@ class nginx::package(
         package_source => $package_source,
         package_ensure => $package_ensure,
         manage_repo    => $manage_repo,
-        require        => Anchor['nginx::package::begin'],
-        before         => Anchor['nginx::package::end'],
+        stage          => setup
       }
     }
     'Solaris': {
